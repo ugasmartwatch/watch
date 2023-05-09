@@ -2,16 +2,21 @@ const iconAlarmOn = "\0" + atob("GBiBAAAAAAAAAAYAYA4AcBx+ODn/nAP/wAf/4A/n8A/n8B/
 const iconAlarmOff = "\0" + (g.theme.dark
   ? atob("GBjBAP////8AAAAAAAAGAGAOAHAcfjg5/5wD/8AH/+AP5/AP5/Af5/gf5/gf5wAf5gAf4Hgf+f4P+bYP8wMH84cD84cB8wMAebYAAf4AAHg=")
   : atob("GBjBAP//AAAAAAAAAAAGAGAOAHAcfjg5/5wD/8AH/+AP5/AP5/Af5/gf5/gf5wAf5gAf4Hgf+f4P+bYP8wMH84cD84cB8wMAebYAAf4AAHg="));
+
+// check if firstDayOfWeek is Sunday or Monday (Sunday is default)
 const firstDayOfWeek = (require("Storage").readJSON("setting.json", true) || {}).firstDayOfWeek || 0;
 
+// get alarms from storage as array
 function getAlarms() {
   return require("Storage").readJSON("sched.json",1)||[];
 }
 
+// push alarm to watch storage
 function setAlarms(alarms) {
   return require("Storage").writeJSON("sched.json",alarms);
 }
 
+// create a new alarm
 function setAlarm(id, alarm) {
   var alarms = getAlarms().filter(a=>a.id!=id);
   if (alarm !== undefined) {
@@ -27,8 +32,9 @@ function setAlarm(id, alarm) {
   }
   setAlarms(alarms);
 }
+
 var alarm1 = setAlarm("alarm1", {
-  msg: "Wake",
+  msg: "Wake Up",
   t: 12*3600000,
   rp: {interval:"dow", num:2},
   dow: 0b100010,
@@ -41,14 +47,17 @@ var alarm2 = setAlarm("alarm2", {
   rp: true,  
 });
 
+// list of alarms
 var alarms = getAlarms();
 
+// trim reminder message fit to the screen
 function trimLabel(label, maxLength) {
   return (label.length > maxLength
       ? label.substring(0,maxLength-3) + "..."
       : label.substring(0,maxLength));
 }
 
+// get reminder information (date, time, repeat)
 function getLabel(e) {
   const date = e.date && new Date(e.date);
   const dateStr = date && `${date.getFullYear()}-${padNumber(date.getMonth()+1)}-${padNumber(date.getDate())}`;
@@ -56,6 +65,7 @@ function getLabel(e) {
       ) + (e.msg ? ` ${e.msg}` : "");
 }
 
+// display repeat pattern
 function decodeRepeat(alarm) {
   if (!alarm.rp) {
     return /*LANG*/"Once";
@@ -78,18 +88,19 @@ function decodeRepeat(alarm) {
   return repeatString;
 }
 
-
+// format time
 function formatTime(t) {
   const hours = Math.floor(t / 3600000);
   const minutes = Math.floor((t % 3600000) / 60000);
   return `${padNumber(hours)}:${padNumber(minutes)}`;
 }
 
+// helper function to display number correctly
 function padNumber(number) {
   return number.toString().padStart(2, "0");
 }
 
-// Show the alarms on startup
+// a display of the reminder list
 function showMainMenu() {
   const menu = {
     "": { "title": /*LANG*/"Reminders" },
@@ -104,21 +115,20 @@ function showMainMenu() {
   E.showMenu(menu);
 }
 
-
 showMainMenu();
 Bangle.loadWidgets();
 Bangle.drawWidgets();
 
 
 var alarm3 = setAlarm("alarm3", {
-  msg: "ahaha",
-  t: 17*3600000 + 45*60000,
+  msg: "Dentis Appointment",
+  t: 15*3600000 + 45*60000,
   date: "2022-06-04",
   rp: {interval:"month",num:2},
 });
 
 var alarm4 = setAlarm("alarm4", {
-  msg: "mo",
-  t: 1*3600000 + 45*60000,
+  msg: "Lunch",
+  t: 12*3600000 + 45*60000,
   rp: {interval:"day",num:2},
 });
