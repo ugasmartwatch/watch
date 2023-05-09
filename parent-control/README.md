@@ -22,6 +22,9 @@
 - Get all alarms (users can see the alarm information (date, time, message) but can't edit anything from the watch)
 
         var alarms = getAlarms();
+- The display: 
+<img width="313" alt="image" src="https://github.com/ugasmartwatch/watch/assets/82740685/20f2dfd9-ee15-4063-8319-5821826a9611">
+<img width="313" alt="image" src="https://github.com/ugasmartwatch/watch/assets/82740685/42935096-438f-43cf-b095-4ae95077c2a4">
         
 # Documentation
     I initially worked on the website that collects values and creates alarms using "sched" libraries.
